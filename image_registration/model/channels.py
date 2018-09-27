@@ -29,7 +29,7 @@ class MarkerChannelAssociation(object):
         'PD-L1': Channels.RED, 'PD1': Channels.RED, 'MHC II': Channels.RED, 'MHCII': Channels.RED,
         'DC-SIGN': Channels.RED, 'CK19': Channels.RED, 'F480': Channels.RED,
 
-        # Gree channel:
+        # Green channel:
         'DC LAMP': Channels.GREEN, 'DC-LAMP': Channels.GREEN, 'CD83': Channels.GREEN, 'CD11C': Channels.GREEN,
         'TIM3': Channels.GREEN,
 
