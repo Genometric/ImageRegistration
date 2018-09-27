@@ -43,7 +43,7 @@ class Region(object):
         # Determine the lower-right corner of the rectangle from a the list of vertices.
         lr = Vertex(x=0, y=0, z=sys.maxint)
         for vertex in vertices:
-            if vertex.x > lr.x and vertex.y > lr.y:
+            if vertex.x >= lr.x and vertex.y >= lr.y:
                 lr.x = vertex.x
                 lr.y = vertex.y
         return ur.x - ul.x, ll.y-ul.y
