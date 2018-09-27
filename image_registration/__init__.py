@@ -105,7 +105,7 @@ class ImageRegistration(object):
         slide = open_slide(image_file)
         image = slide.read_region(
            location=region.get_roi_location(),
-           level=1,
+           level=0,
            size=region.get_region_size())
         return image
 
