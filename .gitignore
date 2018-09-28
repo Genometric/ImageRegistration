@@ -1,5 +1,5 @@
 # Test samples
-test/sample_data
+tests/sample_data
 
 # Mac OS cruft
 .DS_Store
