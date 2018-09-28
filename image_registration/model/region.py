@@ -17,6 +17,37 @@ class Region(object):
         self.bounding_region = None
         self.pixels = None
 
+    def __repr__(self):
+        return "<Region {}>\n\t{}\n\t{}\n</Region {}".format(self.id, self.roi, self.bounding_region, self.id)
+
+    def generate_bounding_box(self, img_width, img_height, y_buffer=100):
+        """
+        Generates a bounding box based on the vertices provided
+        algorithm: height = image height, width = 2*width
+        """
+        xs = [] # 0. low 1. high
+        ys = []
+        for v in self.roi:
+            if v.x not in xs:
+                xs.append(v.x)
+        xs.sort()
+        roi_widening = (xs[1] - xs[0]) / 2
+        x0 = xs[0] - roi_widening if xs[0] - roi_widening >= 0 else 0
+        x1 = xs[1] + roi_widening if xs[1] + roi_widening <= img_width else img_width
+        y0 = 0 + y_buffer
+        y1 = img_height - y_buffer
+
+        bb_verts = []
+        # top left
+        bb_verts.append(Vertex(x0,y0))
+        # top right
+        bb_verts.append(Vertex(x1,y0))
+        # bottom right
+        bb_verts.append(Vertex(x1,y1))
+        # bottom left
+        bb_verts.append(Vertex(x0,y1))
+        self.bounding_region = bb_verts
+
     @classmethod
     def _get_width_and_height(cls, vertices):
         # Determine the upper-level corner of the rectangle from the list of vertices.
@@ -119,5 +150,3 @@ class Region(object):
         :return: void
         """
         self.pixels[x][y] = pixel
-
-

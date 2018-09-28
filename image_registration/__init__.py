@@ -15,7 +15,7 @@ class ImageRegistration(object):
     TODO: a brief description of the class.
     """
 
-    def __init__(self, config, nuclei_file):
+    def __init__(self, config, nuclei_file, has_bounding_boxes=False):
         """
         a brief description goes here ...
         :param config:
@@ -24,12 +24,16 @@ class ImageRegistration(object):
         :param nuclei_file:
         :type nuclei_file:
         """
-        self.regions = self._parse_config_xml(config)
         self.nuclei_file = nuclei_file
-        self.nuclei_image = None
+        slide = open_slide(self.nuclei_file)
+        self.img_width = slide.dimensions[0]
+        self.img_height = slide.dimensions[1]
+        self.has_bounding_boxes = has_bounding_boxes
 
-    @classmethod
-    def _parse_config_xml(cls, config):
+        self.nuclei_image = None
+        self.regions = self._parse_config_xml(config)
+
+    def _parse_config_xml(self, config):
         """
         This parses xml regions
         :param config:
@@ -75,13 +79,14 @@ class ImageRegistration(object):
                         except NameError:
                             raise ParseError("The vertex `{}` does not have X and/or Y coordinate(s)".format(vertex.items()))
                     parsed_regions += 1
-                    if parsed_regions > regions_count / 2:
-                        # add bounding regions
-                        regions[parsed_regions - (regions_count / 2) - 1].set_bounding_region(vertices)
+                    if self.has_bounding_boxes and parsed_regions > regions_count / 2:
+                        # ignore bounding boxes, we've generated our own
+                        break
                     else:
                         # add regions
                         region = Region(et_region.get("Id"))
-                        region.set_region(vertices)
+                        region.set_roi(vertices)
+                        region.generate_bounding_box(self.img_width, self.img_height)
                         regions.append(region)
             return regions
         except ImportError:
